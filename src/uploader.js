@@ -28,12 +28,17 @@ export default class Uploader {
    */
   uploadSelectedFile({ onPreview }) {
     const preparePreview = function (file) {
-      const reader = new FileReader();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
 
-      reader.readAsDataURL(file);
-      reader.onload = (e) => {
-        onPreview(e.target.result);
-      };
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+          console.log(1);
+          onPreview(e.target.result);
+          resolve();
+        };
+        reader.onerror = reject;
+      });
     };
 
     /**
@@ -45,32 +50,35 @@ export default class Uploader {
     // custom uploading
     if (this.config.uploader && typeof this.config.uploader.uploadByFile === 'function') {
       upload = ajax.selectFiles({ accept: this.config.types }).then((files) => {
-        preparePreview(files[0]);
+        return preparePreview(files[0]).then(() => {
+          const customUpload = this.config.uploader.uploadByFile(files[0]);
 
-        const customUpload = this.config.uploader.uploadByFile(files[0]);
+          if (!isPromise(customUpload)) {
+            console.warn('Custom uploader method uploadByFile should return a Promise');
+          }
 
-        if (!isPromise(customUpload)) {
-          console.warn('Custom uploader method uploadByFile should return a Promise');
-        }
-
-        return customUpload;
+          return customUpload;
+        });
       });
 
     // default uploading
     } else {
-      upload = ajax.transport({
-        url: this.config.endpoints.byFile,
-        data: this.config.additionalRequestData,
-        accept: this.config.types,
-        headers: this.config.additionalRequestHeaders,
-        beforeSend: (files) => {
-          preparePreview(files[0]);
-        },
-        fieldName: this.config.field,
-      }).then((response) => response.body);
+      upload = ajax.selectFiles({ accept: this.config.types }).then((files) => {
+        return preparePreview(files[0]).then(() => {
+          return ajax.transport({
+            url: this.config.endpoints.byFile,
+            data: this.config.additionalRequestData,
+            accept: this.config.types,
+            headers: this.config.additionalRequestHeaders,
+            beforeSend: () => {},
+            fieldName: this.config.field,
+          }).then((response) => response.body);
+        });
+      });
     }
 
     upload.then((response) => {
+      console.log(2);
       this.onUpload(response);
     }).catch((error) => {
       this.onError(error);
