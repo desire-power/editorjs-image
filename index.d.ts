@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/member-delimiter-style */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
+import type {
+  BlockTune,
+  BlockTool,
+  BlockToolConstructable,
+  BlockToolConstructorOptions
+} from '@editorjs/editorjs';
 
 /**
  * @typedef {object} ImageToolData
@@ -11,7 +17,7 @@
  * @property {object} file — Image file data returned from backend
  * @property {string} file.url — image URL
  */
-type ImageToolData = {
+export type ImageToolData = {
   caption: string | null
   withBorder: boolean
   withBackground: boolean
@@ -37,7 +43,7 @@ type ImageToolData = {
  * @property {function(File): Promise.<UploadResponseFormat>} [uploader.uploadByFile] - method that upload image by File
  * @property {function(string): Promise.<UploadResponseFormat>} [uploader.uploadByUrl] - method that upload image by URL
  */
-type ImageToolConfig = {
+export type ImageToolConfig = {
   endpoints?: {
     byFile?: string
     byUrl?: string
@@ -51,8 +57,8 @@ type ImageToolConfig = {
   additionalRequestHeaders?: Object
   buttonContent?: string
   uploader?: {
-      uploadByFile?: (file: File) => Promise<UploadResponseFormat>
-      uploadByUrl?: (url: string) => Promise<UploadResponseFormat>
+    uploadByFile?: (file: File) => Promise<UploadResponseFormat>
+    uploadByUrl?: (url: string) => Promise<UploadResponseFormat>
   }
 }
 
@@ -74,7 +80,7 @@ export interface UploadResponseFormat {
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
-export default class ImageTool implements import('@editorjs/editorjs').BlockToolConstructable {
+declare class ImageTool implements BlockToolConstructable {
   /**
    * Notify core that read-only mode is supported
    *
@@ -129,11 +135,11 @@ export default class ImageTool implements import('@editorjs/editorjs').BlockTool
    * @param {BlockAPI|{}} tool.block - current Block API
    */
   new(
-    config: import('@editorjs/editorjs').BlockToolConstructorOptions<
+    config: BlockToolConstructorOptions<
       ImageToolData,
       ImageToolConfig
     >,
-  ): import('@editorjs/editorjs').BlockTool
+  ): BlockTool
 
   /**
    * Renders Block content
@@ -169,7 +175,7 @@ export default class ImageTool implements import('@editorjs/editorjs').BlockTool
    *
    * @returns {Array}
    */
-  renderSettings(): Array<ReturnType<import('@editorjs/editorjs').BlockTune['render']>>
+  renderSettings(): Array<ReturnType<BlockTune['render']>>
 
   /**
    * Fires after clicks on the Toolbox Image Icon
