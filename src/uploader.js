@@ -33,7 +33,6 @@ export default class Uploader {
 
         reader.readAsDataURL(file);
         reader.onload = (e) => {
-          console.log(1);
           onPreview(e.target.result);
           resolve();
         };
@@ -78,7 +77,6 @@ export default class Uploader {
     }
 
     upload.then((response) => {
-      console.log(2);
       this.onUpload(response);
     }).catch((error) => {
       this.onError(error);
