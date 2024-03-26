@@ -17,6 +17,7 @@
   "module": "./dist/image.mjs",
   "exports": {
     ".": {
+      "types": "./index.d.ts",
       "import": "./dist/image.mjs",
       "require": "./dist/image.umd.js"
     }
