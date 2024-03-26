@@ -751,7 +751,7 @@ class B {
       return new Promise((n, o) => {
         const d = new FileReader();
         d.readAsDataURL(i), d.onload = (v) => {
-          console.log(1), a(v.target.result), n();
+          a(v.target.result), n();
         }, d.onerror = o;
       });
     };
@@ -768,7 +768,7 @@ class B {
       },
       fieldName: this.config.field
     }).then((n) => n.body))), c.then((i) => {
-      console.log(2), this.onUpload(i);
+      this.onUpload(i);
     }).catch((i) => {
       this.onError(i);
     });
