@@ -6,6 +6,18 @@ Image Block for the [Editor.js](https://editorjs.io).
 
 ![](https://capella.pics/63a03d04-3816-45b2-87b2-d85e556f0066.jpg)
 
+## fork先からの変更
+
+カスタムアップローダーを使用して画像を送信した場合にBEからレスポンス
+```json
+{
+  "success" : 0,
+    "file": null
+}
+```
+が帰ってきた場合にロードインジケーターが消えないので修正
+[Providing custom uploading methods](#providing-custom-uploading-methods)
+
 ## Features
 
 - Uploading file from the device
